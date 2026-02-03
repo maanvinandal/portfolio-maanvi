@@ -1,43 +1,49 @@
- import React from 'react'
+import React from 'react'
 import ProjectCard from '../components/ProjectCard'
 
 export default function Projects() {
   const projects = [
     {
       title: 'UX/UI & Human-Centered AI Platform (WILwork)',
-    image: '/images/project-a..jpg',
-    description:
-      'Currently working on a user-centered digital platform designed to support founders, startups, partners, and global users within the clean technology ecosystem. The project focuses on intuitive UX/UI design, ethical and transparent AI interactions, and accessibility across all platform touchpoints.',
-    role: 'UX/UI Designer & Frontend Developer',
-    status: 'Currently Working',
-  },
-    {
-      title: 'SPA Website – Semester 1 Final Project',
-    image: '/images/project-b.png',
-    description:
-      'Semester 1 final project focused on designing and developing a responsive spa website. The project emphasized clean UI design, structured layouts, and user-friendly navigation using foundational web technologies.',
-    role: 'Frontend Developer',
-    link: 'http://studentweb.cencol.ca/m1095/project/final_project.html',
-  
+      image: '/images/project-a..jpg',
+      description:
+        'Designing a platform for clean technology founders with a focus on ethical AI touchpoints, thoughtful onboarding, and accessible navigation.',
+      role: 'UX/UI Designer & Frontend Developer',
+      status: 'In progress',
     },
-
     {
-      title: 'Student Researcher – Self-Learning Module (WIMTACH)',
-    image: '/images/project-c.png',
-    description:
-      'Worked as a student researcher at WIMTACH, Centennial College, contributing to the design of a self-learning module. Responsibilities included content generation, structuring educational material, and supporting the development of learner-focused digital resources.',
-    role: 'Student Researcher & Content Designer',
-  
+      title: 'Responsive SPA Website',
+      image: '/images/project-b.png',
+      description:
+        'A responsive single-page site with clean layout systems, modern typography, and smooth interaction patterns.',
+      role: 'Frontend Developer',
+      link: 'http://studentweb.cencol.ca/m1095/project/final_project.html',
+    },
+    {
+      title: 'Self-Learning Module Research (WIMTACH)',
+      image: '/images/project-c.png',
+      description:
+        'Structured learner content and supported the design of a self-paced education module focused on clarity and engagement.',
+      role: 'Student Researcher & Content Designer',
     },
   ]
 
   return (
-    <section>
-      <h1>Projects</h1>
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        {projects.map((p, i) => (
-          <ProjectCard key={i} {...p} />
-        ))}
+    <section className="page">
+      <div className="container">
+        <div className="section-heading">
+          <p className="eyebrow">Projects</p>
+          <h1>Selected work</h1>
+          <p>
+            A curated set of projects showcasing UX strategy, frontend execution,
+            and thoughtful problem solving.
+          </p>
+        </div>
+        <div className="projects-grid">
+          {projects.map((p, i) => (
+            <ProjectCard key={i} {...p} />
+          ))}
+        </div>
       </div>
     </section>
   )

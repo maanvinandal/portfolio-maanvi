@@ -2,23 +2,23 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import Logo from './Logo'
 
-const linkStyle = ({ isActive }) => ({
-  margin: '0 8px',
-  textDecoration: 'none',
-  color: isActive ? '#2b6cb0' : '#333',
-  fontWeight: isActive ? '600' : '400',
-})
-
 export default function Navbar() {
+  const linkClass = ({ isActive }) =>
+    `nav-link${isActive ? ' active' : ''}`
+
   return (
-    <nav>
-      <Logo />
-      <div>
-        <NavLink to="/" style={linkStyle}>Home</NavLink>
-        <NavLink to="/about" style={linkStyle}>About</NavLink>
-        <NavLink to="/projects" style={linkStyle}>Projects</NavLink>
-        <NavLink to="/services" style={linkStyle}>Services</NavLink>
-        <NavLink to="/contact" style={linkStyle}>Contact</NavLink>
+    <nav className="site-nav">
+      <div className="container nav-inner">
+        <Logo />
+        <div className="nav-links">
+          <NavLink to="/" className={linkClass}>Home</NavLink>
+          <NavLink to="/about" className={linkClass}>About</NavLink>
+          <NavLink to="/projects" className={linkClass}>Projects</NavLink>
+          <NavLink to="/services" className={linkClass}>Services</NavLink>
+        </div>
+        <div className="nav-cta">
+          <NavLink to="/contact" className="btn btn-primary">Contact</NavLink>
+        </div>
       </div>
     </nav>
   )

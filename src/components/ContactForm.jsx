@@ -30,6 +30,10 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="contact-form">
+      <div className="form-header">
+        <h3>Send a message</h3>
+        <p>Share the essentials and I'll reply with a clear plan.</p>
+      </div>
       <div className="form-row">
         <input name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} required />
         <input name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
@@ -37,7 +41,7 @@ export default function ContactForm() {
       <input name="phone" placeholder="Contact Number" value={form.phone} onChange={handleChange} />
       <input name="email" type="email" placeholder="Email Address" value={form.email} onChange={handleChange} required />
       <textarea name="message" placeholder="Message" value={form.message} onChange={handleChange} rows="5" required />
-      <button type="submit">Send Message</button>
+      <button type="submit" className="btn btn-primary">Send message</button>
     </form>
   )
 }
