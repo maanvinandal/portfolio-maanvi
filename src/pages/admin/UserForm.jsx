@@ -5,15 +5,18 @@ import { getUserById, createUser, updateUser } from '../../services/api';
 export default function UserForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
     email: '',
     password: '',
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
   const isEditing = !!id;
 
   useEffect(() => {
@@ -23,20 +26,32 @@ export default function UserForm() {
   }, [id]);
 
   const loadUser = async () => {
-    setLoading(true);
-    const response = await getUserById(id);
-    
-    if (response.success) {
-      setFormData(response.data.data);
-    } else {
-      setError('Failed to load user');
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await getUserById(id);
+
+      if (response.success) {
+        setFormData({
+          firstname: response.data.firstname || '',
+          lastname: response.data.lastname || '',
+          email: response.data.email || '',
+          password: '',
+        });
+      } else {
+        setError('Failed to load user');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to load user');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -48,28 +63,40 @@ export default function UserForm() {
     setMessage('');
     setLoading(true);
 
-    let response;
-    if (isEditing) {
-      response = await updateUser(id, formData);
-    } else {
-      response = await createUser(formData);
-    }
+    try {
+      let response;
 
-    if (response.success) {
-      setMessage(isEditing ? 'User updated successfully!' : 'User created successfully!');
-      setTimeout(() => navigate('/admin/users'), 1500);
-    } else {
-      setError(response.error || 'Failed to save user');
+      if (isEditing) {
+        response = await updateUser(id, formData);
+      } else {
+        response = await createUser(formData);
+      }
+
+      if (response.success) {
+        setMessage(isEditing ? 'User updated successfully!' : 'User created successfully!');
+        setTimeout(() => navigate('/admin/users'), 1500);
+      } else {
+        setError(response.message || 'Failed to save user');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to save user');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  if (loading && isEditing) return <div className="container"><p>Loading...</p></div>;
+  if (loading && isEditing) {
+    return (
+      <div className="container">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ marginTop: '40px', maxWidth: '500px' }}>
       <h1>{isEditing ? 'Edit User' : 'Add New User'}</h1>
-      
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {message && <p style={{ color: 'green' }}>{message}</p>}
 
@@ -111,7 +138,9 @@ export default function UserForm() {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Password {isEditing ? '(leave blank to keep current)' : '*'}</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>
+            Password {isEditing ? '(leave blank to keep current)' : '*'}
+          </label>
           <input
             type="password"
             name="password"
@@ -125,7 +154,13 @@ export default function UserForm() {
         <button
           type="submit"
           disabled={loading}
-          style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}
+          style={{
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+          }}
         >
           {loading ? 'Saving...' : isEditing ? 'Update User' : 'Create User'}
         </button>
