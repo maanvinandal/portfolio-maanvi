@@ -19,16 +19,22 @@ const apiFetch = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, mergedOptions);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
     const data = await response.json();
-    return { success: true, data };
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || `HTTP error! status: ${response.status}`,
+      };
+    }
+
+    return data;
   } catch (error) {
     console.error('API Error:', error);
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      message: error.message || 'Network error',
+    };
   }
 };
 
@@ -41,30 +47,12 @@ export const getUserById = async (id) => {
   return apiFetch(`/users/${id}`);
 };
 
-export async function createUser(userData) {
-  try {
-    const response = await fetch(`${API_BASE}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        error: data.message || `HTTP error ${response.status}`,
-      };
-    }
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return { success: false, error: error.message };
-  }
+export const createUser = async (userData) => {
+  return apiFetch('/users', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  });
 };
-
 
 export const updateUser = async (id, userData) => {
   return apiFetch(`/users/${id}`, {

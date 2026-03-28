@@ -15,39 +15,47 @@ export default function UserList() {
   const loadUsers = async () => {
     setLoading(true);
     setError('');
+
     const response = await getUsers();
-    
+
     if (response.success) {
-      setUsers(response.data.data || []);
+      setUsers(response.data || []);
     } else {
-      setError('Failed to load users');
+      setError(response.message || 'Failed to load users');
     }
+
     setLoading(false);
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm('Are you sure you want to delete this user?')) {
       const response = await deleteUser(id);
-      
+
       if (response.success) {
         setMessage('User deleted successfully!');
-        loadUsers();
+        await loadUsers();
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setError('Failed to delete user');
+        setError(response.message || 'Failed to delete user');
       }
     }
   };
 
-  if (loading) return <div className="container"><p>Loading users...</p></div>;
+  if (loading) {
+    return (
+      <div className="container">
+        <p>Loading users...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ marginTop: '40px' }}>
       <h1>Users</h1>
-      
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {message && <p style={{ color: 'green' }}>{message}</p>}
-      
+
       <Link to="/admin/users/new" className="btn btn-primary" style={{ marginBottom: '20px' }}>
         Add New User
       </Link>
@@ -65,18 +73,24 @@ export default function UserList() {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user._id} style={{ borderBottom: '1px solid #eee' }}>
+            {users.map((user) => (
+              <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>{user.firstname}</td>
                 <td style={{ padding: '10px' }}>{user.lastname}</td>
                 <td style={{ padding: '10px' }}>{user.email}</td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
-                  <Link to={`/admin/users/${user._id}`} className="btn" style={{ marginRight: '10px' }}>
+                  <Link to={`/admin/users/${user.id}`} className="btn" style={{ marginRight: '10px' }}>
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(user._id)}
-                    style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}
+                    onClick={() => handleDelete(user.id)}
+                    style={{
+                      padding: '5px 10px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
                   >
                     Delete
                   </button>

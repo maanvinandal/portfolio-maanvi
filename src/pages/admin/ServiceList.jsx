@@ -15,40 +15,52 @@ export default function ServiceList() {
   const loadServices = async () => {
     setLoading(true);
     setError('');
+
     const response = await getServices();
-    
+
     if (response.success) {
-      setServices(response.data.data || []);
+      setServices(response.data || []);
     } else {
-      setError('Failed to load services');
+      setError(response.message || 'Failed to load services');
     }
+
     setLoading(false);
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this service?')) {
+    if (window.confirm('Are you sure you want to delete this service?')) {
       const response = await deleteService(id);
-      
+
       if (response.success) {
         setMessage('Service deleted successfully!');
-        loadServices();
+        await loadServices();
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setError('Failed to delete service');
+        setError(response.message || 'Failed to delete service');
       }
     }
   };
 
-  if (loading) return <div className="container"><p>Loading services...</p></div>;
+  if (loading) {
+    return (
+      <div className="container">
+        <p>Loading services...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ marginTop: '40px' }}>
       <h1>Services</h1>
-      
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {message && <p style={{ color: 'green' }}>{message}</p>}
-      
-      <Link to="/admin/services/new" className="btn btn-primary" style={{ marginBottom: '20px' }}>
+
+      <Link
+        to="/admin/services/new"
+        className="btn btn-primary"
+        style={{ marginBottom: '20px' }}
+      >
         Add New Service
       </Link>
 
@@ -64,17 +76,33 @@ export default function ServiceList() {
             </tr>
           </thead>
           <tbody>
-            {services.map(service => (
-              <tr key={service._id} style={{ borderBottom: '1px solid #eee' }}>
+            {services.map((service) => (
+              <tr key={service.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>{service.title}</td>
-                <td style={{ padding: '10px' }}>{service.description?.substring(0, 50)}...</td>
+                <td style={{ padding: '10px' }}>
+                  {service.description
+                    ? service.description.length > 50
+                      ? `${service.description.substring(0, 50)}...`
+                      : service.description
+                    : 'No description'}
+                </td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
-                  <Link to={`/admin/services/${service._id}`} className="btn" style={{ marginRight: '10px' }}>
+                  <Link
+                    to={`/admin/services/${service.id}`}
+                    className="btn"
+                    style={{ marginRight: '10px' }}
+                  >
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(service._id)}
-                    style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}
+                    onClick={() => handleDelete(service.id)}
+                    style={{
+                      padding: '5px 10px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
                   >
                     Delete
                   </button>
