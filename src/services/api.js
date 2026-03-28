@@ -41,12 +41,30 @@ export const getUserById = async (id) => {
   return apiFetch(`/users/${id}`);
 };
 
-export const createUser = async (userData) => {
-  return apiFetch('/users', {
-    method: 'POST',
-    body: JSON.stringify(userData),
-  });
+export async function createUser(userData) {
+  try {
+    const response = await fetch(`${API_BASE}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.message || `HTTP error ${response.status}`,
+      };
+    }
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return { success: false, error: error.message };
+  }
 };
+
 
 export const updateUser = async (id, userData) => {
   return apiFetch(`/users/${id}`, {
