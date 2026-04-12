@@ -53,6 +53,46 @@
   display: flex;
   gap: 1.5rem;
 }
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form input,
+.auth-form textarea,
+.auth-form select {
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.success-text {
+  color: green;
+  margin-top: 12px;
+}
+
+.error-text {
+  color: red;
+  margin-top: 12px;
+} 
 
 .nav-cta {
   display: flex;
@@ -137,9 +177,11 @@
 }
 
 .hero-card img {
-  height: 320px;
+  height: 380px;
   width: 100%;
   object-fit: cover;
+  max-width: 100%;
+  display: block;
 }
 
 .hero-card-panel {

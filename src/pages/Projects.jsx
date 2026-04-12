@@ -1,32 +1,23 @@
-import React from 'react'
-import ProjectCard from '../components/ProjectCard'
+import React, { useEffect, useState } from 'react';
+import ProjectCard from '../components/ProjectCard';
+import { getProjects } from '../services/api.js';
 
 export default function Projects() {
-  const projects = [
-    {
-      title: 'UX/UI & Human-Centered AI Platform (WILwork)',
-      image: '/images/project-a..jpg',
-      description:
-        'Designing a platform for clean technology founders with a focus on ethical AI touchpoints, thoughtful onboarding, and accessible navigation.',
-      role: 'UX/UI Designer & Frontend Developer',
-      status: 'In progress',
-    },
-    {
-      title: 'Responsive SPA Website',
-      image: '/images/project-b.png',
-      description:
-        'A responsive single-page site with clean layout systems, modern typography, and smooth interaction patterns.',
-      role: 'Frontend Developer',
-      link: 'http://studentweb.cencol.ca/m1095/project/final_project.html',
-    },
-    {
-      title: 'Self-Learning Module Research (WIMTACH)',
-      image: '/images/project-c.png',
-      description:
-        'Structured learner content and supported the design of a self-paced education module focused on clarity and engagement.',
-      role: 'Student Researcher & Content Designer',
-    },
-  ]
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      const result = await getProjects();
+
+      if (Array.isArray(result)) {
+        setProjects(result);
+      } else if (result.projects) {
+        setProjects(result.projects);
+      }
+    };
+
+    loadProjects();
+  }, []);
 
   return (
     <section className="page">
@@ -39,12 +30,13 @@ export default function Projects() {
             and thoughtful problem solving.
           </p>
         </div>
+
         <div className="projects-grid">
-          {projects.map((p, i) => (
-            <ProjectCard key={i} {...p} />
+          {projects.map((p) => (
+            <ProjectCard key={p._id} {...p} />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

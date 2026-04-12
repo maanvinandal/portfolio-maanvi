@@ -37,7 +37,7 @@ export default function Home() {
         </div>
         <div className="hero-visual">
           <div className="hero-card">
-            <img src="/images/background.jpg" alt="Workspace aesthetic" />
+            <img src="/images/Screenshot%202026-03-28%20175828.png" alt="Workspace screenshot" />
             <div className="hero-card-panel">
               <p className="panel-title">Current focus</p>
               <ul className="panel-list">

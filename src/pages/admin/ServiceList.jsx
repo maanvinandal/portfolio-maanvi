@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getServices, deleteService } from '../../services/api';
+import { getServices, deleteService } from '../../services/api.js';
 
 export default function ServiceList() {
   const [services, setServices] = useState([]);
@@ -18,8 +18,12 @@ export default function ServiceList() {
 
     const response = await getServices();
 
-    if (response.success) {
-      setServices(response.data || []);
+    if (Array.isArray(response)) {
+      setServices(response);
+    } else if (response.success && Array.isArray(response.data)) {
+      setServices(response.data);
+    } else if (Array.isArray(response.services)) {
+      setServices(response.services);
     } else {
       setError(response.message || 'Failed to load services');
     }
@@ -77,7 +81,7 @@ export default function ServiceList() {
           </thead>
           <tbody>
             {services.map((service) => (
-              <tr key={service.id} style={{ borderBottom: '1px solid #eee' }}>
+              <tr key={service._id || service.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>{service.title}</td>
                 <td style={{ padding: '10px' }}>
                   {service.description
@@ -88,14 +92,14 @@ export default function ServiceList() {
                 </td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
                   <Link
-                    to={`/admin/services/${service.id}`}
+                    to={`/admin/services/${service._id || service.id}`}
                     className="btn"
                     style={{ marginRight: '10px' }}
                   >
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(service.id)}
+                    onClick={() => handleDelete(service._id || service.id)}
                     style={{
                       padding: '5px 10px',
                       backgroundColor: '#dc3545',

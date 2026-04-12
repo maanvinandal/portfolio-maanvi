@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProjects, deleteProject } from '../../services/api';
+import { getProjects, deleteProject } from '../../services/api.js';
 
 export default function ProjectList() {
   const [projects, setProjects] = useState([]);
@@ -18,8 +18,12 @@ export default function ProjectList() {
 
     const response = await getProjects();
 
-    if (response.success) {
-      setProjects(response.data || []);
+    if (Array.isArray(response)) {
+      setProjects(response);
+    } else if (response.success && Array.isArray(response.data)) {
+      setProjects(response.data);
+    } else if (Array.isArray(response.projects)) {
+      setProjects(response.projects);
     } else {
       setError(response.message || 'Failed to load projects');
     }
@@ -78,7 +82,7 @@ export default function ProjectList() {
           </thead>
           <tbody>
             {projects.map((project) => (
-              <tr key={project.id} style={{ borderBottom: '1px solid #eee' }}>
+              <tr key={project._id || project.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>{project.title}</td>
                 <td style={{ padding: '10px' }}>
                   {project.completion
@@ -94,14 +98,14 @@ export default function ProjectList() {
                 </td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
                   <Link
-                    to={`/admin/projects/${project.id}`}
+                    to={`/admin/projects/${project._id || project.id}`}
                     className="btn"
                     style={{ marginRight: '10px' }}
                   >
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(project.id)}
+                    onClick={() => handleDelete(project._id || project.id)}
                     style={{
                       padding: '5px 10px',
                       backgroundColor: '#dc3545',

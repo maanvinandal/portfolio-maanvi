@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getUsers, deleteUser } from '../../services/api';
+import { getUsers, deleteUser } from '../../services/api.js';
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -18,8 +18,12 @@ export default function UserList() {
 
     const response = await getUsers();
 
-    if (response.success) {
-      setUsers(response.data || []);
+    if (Array.isArray(response)) {
+      setUsers(response);
+    } else if (response.success && Array.isArray(response.data)) {
+      setUsers(response.data);
+    } else if (Array.isArray(response.users)) {
+      setUsers(response.users);
     } else {
       setError(response.message || 'Failed to load users');
     }
@@ -74,16 +78,16 @@ export default function UserList() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
+              <tr key={user._id || user.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>{user.firstname}</td>
                 <td style={{ padding: '10px' }}>{user.lastname}</td>
                 <td style={{ padding: '10px' }}>{user.email}</td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
-                  <Link to={`/admin/users/${user.id}`} className="btn" style={{ marginRight: '10px' }}>
+                  <Link to={`/admin/users/${user._id || user.id}`} className="btn" style={{ marginRight: '10px' }}>
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(user._id || user.id)}
                     style={{
                       padding: '5px 10px',
                       backgroundColor: '#dc3545',

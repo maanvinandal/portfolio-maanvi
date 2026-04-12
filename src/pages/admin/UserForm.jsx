@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getUserById, createUser, updateUser } from '../../services/api';
+import { getUserById, createUser, updateUser } from '../../services/api.js';
 
 export default function UserForm() {
   const { id } = useParams();

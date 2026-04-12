@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProjectById, createProject, updateProject } from '../../services/api';
+import { getProjectById, createProject, updateProject } from '../../services/api.js';
 
 export default function ProjectForm() {
   const { id } = useParams();

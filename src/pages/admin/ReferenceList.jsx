@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getReferences, deleteReference } from '../../services/api';
+import { getReferences, deleteReference } from '../../services/api.js';
 
 export default function ReferenceList() {
   const [references, setReferences] = useState([]);
@@ -18,8 +18,12 @@ export default function ReferenceList() {
 
     const response = await getReferences();
 
-    if (response.success) {
-      setReferences(response.data || []);
+    if (Array.isArray(response)) {
+      setReferences(response);
+    } else if (response.success && Array.isArray(response.data)) {
+      setReferences(response.data);
+    } else if (Array.isArray(response.references)) {
+      setReferences(response.references);
     } else {
       setError(response.message || 'Failed to load references');
     }
@@ -79,7 +83,7 @@ export default function ReferenceList() {
           </thead>
           <tbody>
             {references.map((ref) => (
-              <tr key={ref.id} style={{ borderBottom: '1px solid #eee' }}>
+              <tr key={ref._id || ref.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '10px' }}>
                   {ref.firstname} {ref.lastname}
                 </td>
@@ -88,14 +92,14 @@ export default function ReferenceList() {
                 <td style={{ padding: '10px' }}>{ref.company}</td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
                   <Link
-                    to={`/admin/references/${ref.id}`}
+                    to={`/admin/references/${ref._id || ref.id}`}
                     className="btn"
                     style={{ marginRight: '10px' }}
                   >
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(ref.id)}
+                    onClick={() => handleDelete(ref._id || ref.id)}
                     style={{
                       padding: '5px 10px',
                       backgroundColor: '#dc3545',
