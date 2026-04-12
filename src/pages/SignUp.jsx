@@ -5,11 +5,12 @@ import { useNavigate, Link } from 'react-router-dom';
 export default function SignUp() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+const [formData, setFormData] = useState({
+  firstname: '',
+  lastname: '',
+  email: '',
+  password: '',
+});
 
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -43,37 +44,46 @@ export default function SignUp() {
         <div className="auth-card">
           <h1>Sign Up</h1>
           <form onSubmit={handleSubmit} className="auth-form">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+  <input
+    type="text"
+    name="firstname"
+    placeholder="First Name"
+    value={formData.firstname}
+    onChange={handleChange}
+    required
+  />
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+  <input
+    type="text"
+    name="lastname"
+    placeholder="Last Name"
+    value={formData.lastname}
+    onChange={handleChange}
+    required
+  />
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+  <input
+    type="email"
+    name="email"
+    placeholder="Email Address"
+    value={formData.email}
+    onChange={handleChange}
+    required
+  />
 
-            <button type="submit" className="btn btn-primary">
-              Create Account
-            </button>
-          </form>
+  <input
+    type="password"
+    name="password"
+    placeholder="Password"
+    value={formData.password}
+    onChange={handleChange}
+    required
+  />
+
+  <button type="submit" className="btn btn-primary">
+    Create Account
+  </button>
+</form>
 
           {message && <p className="success-text">{message}</p>}
           {error && <p className="error-text">{error}</p>}
